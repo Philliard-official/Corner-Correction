@@ -8,7 +8,8 @@ close all
 clc
 
 %read in image
-or_im = imread('web13.jpg'); 
+image_name = 'web13.jpg';
+or_im = imread(image_name); 
 
 % store the dimensions of the image in x, y, and z
 [x,y,z] = size(or_im); 
@@ -22,14 +23,14 @@ catch ME
 end
 
 % settings
-base_distance = 3;
-scaling_distance = 5;
+base_distance = 4.5;
+scaling_distance = 7;
 base_radius = 0.011;
 scaling_radius = 0.016;
 percentPoints = 0.70; 
 scan_width = x;
 scan_length = y;
-z_axis = double(zeros(length(Z),1)); % replace the expression with the z-axis depth
+z_axis = 0; % replace the expression with the z-axis depth
 
 % adjust contrast to improve results
 I = imadjust(I); 
@@ -144,9 +145,11 @@ plot(Z(:,1),Z(:,2), 'mo', 'markerfacecolor' , 'm')
 
 xscale = x / scan_width;
 yscale = y / scan_length;
+clear z_points
+z_points(1:length(Z),1) = double(z_axis);
 
-fileID = fopen('exp.txt','w');
-text_file = vertcat(vertcat(vertcat(1:length(Z), (xscale*rot90(Z(:,1)))), (yscale*rot90(Z(:,2)))), rot90(z_axis));
+fileID = fopen('results.txt','w');
+text_file = vertcat(vertcat(vertcat(1:length(Z), (xscale*rot90(Z(:,1)))), (yscale*rot90(Z(:,2)))), rot90(z_points));
 fprintf(fileID,'%i\t%6.4f\t%6.4f\t%6.4f\n', text_file);
 fclose(fileID);
 
